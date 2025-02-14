@@ -1,0 +1,1 @@
+This repository contains Terraform code to deploy a Kubernetes cluster in Yandex Cloud with automatic node scaling. It also includes an Nginx deployment with pod autoscaling and public accessibility.
