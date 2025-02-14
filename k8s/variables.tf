@@ -9,3 +9,11 @@ variable "cloud_id" {
   type = string
   sensitive = true
 }
+
+# yc init
+# yc iam create-token
+variable "yandex_token" {
+  description = "IAM token"
+  type = string
+  sensitive = true
+}
