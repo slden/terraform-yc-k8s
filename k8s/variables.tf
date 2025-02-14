@@ -1,11 +1,9 @@
 variable "folder_id" {
-    description = "id каталога в YC"
     type = string
     sensitive = true
 }
 
 variable "cloud_id" {
-  description = "id облака"
   type = string
   sensitive = true
 }
@@ -17,3 +15,28 @@ variable "yandex_token" {
   type = string
   sensitive = true
 }
+
+variable "subnet_cidr" {
+  description = "CIDR block for the subnet"
+  type = string
+}
+
+variable "cluster_name" {
+  description = "Name of K8s-cluster"
+}
+
+variable "network_id" {
+  type = string
+}
+
+variable "master_version" {
+  description = "K8s version for master"
+  type = string
+}
+
+variable "service_account_id" {
+  type = string
+}
+
+
+
