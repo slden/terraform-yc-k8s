@@ -1,7 +1,7 @@
 This repository contains Terraform code to deploy a Kubernetes cluster in Yandex Cloud with automatic node scaling. It also includes an Nginx deployment with pod autoscaling.
 
-Contents of the '.terraformrc'
-
+**Contents of the '.terraformrc'**
+```
 provider_installation {
   network_mirror {
     url = "https://terraform-mirror.yandexcloud.net/"
@@ -11,3 +11,4 @@ provider_installation {
     exclude = ["registry.terraform.io/*/*"]
   }
 }
+```
