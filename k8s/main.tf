@@ -190,5 +190,5 @@ resource "yandex_kubernetes_node_group" "k8s_node_group" {
 
 # Выводим kubeconfig
 output "kubeconfig" {
-  value = yandex_kubernetes_cluster.cluster.kubeconfig[0].config
+  value = yandex_kubernetes_cluster.zonal_cluster.kubeconfig[0].config
 }
