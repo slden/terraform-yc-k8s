@@ -63,4 +63,6 @@ variable "max_nodes" {
 
 variable "initial_nodes" {
   description = "The initial number of k8s-nodes in a group"
+  type = number
+  default = 1
 }
