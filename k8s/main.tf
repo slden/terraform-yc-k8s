@@ -110,7 +110,7 @@ resource "yandex_kubernetes_cluster" "zonal_cluster" {
     purpose     = "managed-kubernetes"
   }
 
-  release_channnel        = "STABLE"
+  release_channel         = "STABLE"
   network_policy_provider = "CALICO"
 
   kms_provider {
