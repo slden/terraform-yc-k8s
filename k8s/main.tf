@@ -45,6 +45,13 @@ resource "yandex_vpc_subnet" "subnet" {
   network_id = yandex_vpc_network.vpc.id
 }
 
+# Лог-группа для k8s
+resource "yandex_logging_group" "k8s_logs" {
+  name = "k8s_logs"
+  description = "Log group for Kubernetes master logs"
+  folder_id = var.folder_id
+}
+
 # Описание k8s кластера
 resource "yandex_kubernetes_cluster" "zonal_cluster" {
   name        = var.cluster_name
@@ -58,19 +65,43 @@ resource "yandex_kubernetes_cluster" "zonal_cluster" {
       zone = yandex_vpc_subnet.subnet.zone
       subnet_id = yandex_vpc_subnet.subnet.id
     }
-  }
-
-    # Линтер ругается 'Unexpected attribute: An attribute named "public_ip" is not expected here'
+  
+    # Проверка синтаксиса ругается 'Unexpected attribute: An attribute named "public_ip" is not expected here'
     # Но в свежей документации провайдера указано как раз такая конструкция 
     public_ip = true
 
-    # Снова ругается линтер
-    security_group_ids = ["${yandex_vpc_security_group.security_group_name.id}"]
+    # Снова ругается проверка синтаксиса от офф расширения Hashicorp Terraform (отключил)
+    security_group_ids = ["${yandex_vpc_security_group.sg1.id}"]
 
+    maintenance_policy {
+      auto_upgrade = true
 
-    
-
+      maintenance_window {
+        start_time = "03:00"
+        duration = "3h"
+      }      
+    }
+        
+    master_logging {
+      enabled                    = true
+      log_group_id               = yandex_logging_group.k8s_logs.id
+      kube_apiserver_enabled     = true
+      cluster_autoscaler_enabled = true
+      events_enabled             = true
+      audit_enabled              = true
+    }
+  }        
+  
   # Т.к не прод, используем один аккаунт (с ролью admin)  
   service_account_id      = var.service_account_id
-  node_service_account_id = var.service_account_id
+  node_service_account_id = var.service_account_id  
+
+  labels = {
+    environment = "dev"
+    app = "nginx"
+    purpose = "managed-kubernetes"
+  }
+
+  release_channnel = "STABLE"
+  network_policy_provider = "CALICO"
 }
