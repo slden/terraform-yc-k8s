@@ -68,7 +68,7 @@ resource "yandex_kubernetes_cluster" "zonal_cluster" {
   network_id = yandex_vpc_network.vpc.id
 
   master {
-    version = var.master_version
+    version = var.k8s_version
     zonal {
       zone      = yandex_vpc_subnet.subnet.zone
       subnet_id = yandex_vpc_subnet.subnet.id
@@ -85,6 +85,7 @@ resource "yandex_kubernetes_cluster" "zonal_cluster" {
       auto_upgrade = true
 
       maintenance_window {
+        day = tuesday
         start_time = "03:00"
         duration   = "3h"
       }
@@ -116,4 +117,78 @@ resource "yandex_kubernetes_cluster" "zonal_cluster" {
   kms_provider {
     key_id = yandex_kms_symmetric_key.key-a.id
   }
+}
+
+resource "yandex_kubernetes_node_group" "k8s_node_group" {
+  cluster_id  = yandex_kubernetes_cluster.zonal_cluster.id
+  name        = "k8s_node_group"
+  version     = "1.30"
+
+  labels = {
+    "environment" = "dev"
+  }
+
+  instance_template {
+    platform_id = "standard-v2"
+
+    network_interface {
+      nat        = true
+      subnet_ids = ["${yandex_vpc_subnet.subnet.id}"]
+    }  
+
+    resources {
+      memory = var.node_memory
+      cores  = var.node_cores
+    }
+
+    boot_disk {
+      type = "network-hdd"
+      size = var.node_disk_size
+    }
+
+# Прерываемые ВМ
+    scheduling_policy {
+      preemptible = true
+    }
+
+    container_runtime {
+      type = "containerd"
+    }
+  }
+
+  scale_policy {
+    auto_scale {
+      min = var.min_nodes
+      max = var.max_nodes
+      initial = var.initial_nodes
+    }
+  }
+
+  allocation_policy {
+    location {
+      zone = "ru-central1-d"
+    }
+  }
+
+  maintenance_policy {
+    auto_upgrade = true
+    auto_repair  = true
+
+    maintenance_window {
+      day        = "tuesday"
+      start_time = "06:00"
+      duration   = "3h"
+    }
+
+    maintenance_window {
+      day        = "thursday"
+      start_time = "03:00"
+      duration   = "4h30m"
+    }
+  }
+}
+
+# Выводим kubeconfig
+output "kubeconfig" {
+  value = yandex_kubernetes_cluster.cluster.kubeconfig[0].config
 }

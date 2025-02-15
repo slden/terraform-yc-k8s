@@ -22,15 +22,10 @@ variable "subnet_cidr" {
 }
 
 variable "cluster_name" {
-  description = "Name of K8s-cluster"
-}
-
-variable "network_id" {
   type = string
 }
 
-variable "master_version" {
-  description = "K8s version for master"
+variable "k8s_version" {
   type = string
 }
 
@@ -38,5 +33,34 @@ variable "service_account_id" {
   type = string
 }
 
+variable "node_memory" {
+  type = number
+  default = 2
+}
 
+variable "node_cores" {
+  type = number
+  default = 2
+}
 
+variable "node_disk_size" {
+  description = "Disk size (in GB)"
+  type = number
+  default = 64
+}
+
+variable "min_nodes" {
+  description = "Minimum number of k8s-nodes in a group"
+  type = number
+  default = 1
+}
+
+variable "max_nodes" {
+  description = "Maximum number of k8s-nodes in a group"
+  type = number
+  default = 2
+}
+
+variable "initial_nodes" {
+  description = "The initial number of k8s-nodes in a group"
+}
