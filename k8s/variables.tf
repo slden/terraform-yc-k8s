@@ -13,6 +13,12 @@ variable "subnet_cidr" {
   type = string
 }
 
+variable "ingress_port" {
+  description = "Public ingress port for Nginx service"
+  type = number
+  default = 80
+}
+
 variable "cluster_name" {
   type = string
 }

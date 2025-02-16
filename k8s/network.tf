@@ -18,9 +18,9 @@ resource "yandex_vpc_security_group" "sg1" {
   # Разрешаем входящий трафик на 8080 из Интернета
   ingress {
     protocol       = "TCP"
-    description    = "Allow incoming TCP traffic on port 8080 from Internet"
+    description    = "Allow incoming TCP traffic on port 80 from Internet"
     v4_cidr_blocks = ["0.0.0.0/0"]
-    port           = 8080
+    port           = var.ingress_port
   }
 
   # Разрешаем входящий трафик на порт 443 (K8s API server) из Интернета
