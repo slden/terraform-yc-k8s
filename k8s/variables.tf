@@ -13,7 +13,8 @@ variable "cloud_id" {
 variable "yandex_token" {
   description = "IAM token"
   type = string
-  sensitive = true
+#  Закомментим чтобы можно было передать значение в output - но вообще так не стоит делать   
+#  sensitive = true
 }
 
 variable "subnet_cidr" {
