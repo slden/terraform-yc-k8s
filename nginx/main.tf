@@ -70,7 +70,8 @@ resource "kubernetes_service" "nginx" {
 }
 
 # HPA для Nginx
-resource "kubernetes_horizontal_pod_autoscaler" "nginx" {
+# Вот тут немножко погулить пришлось :) Нужно именно v2 использовать, иначе ловил ошибку
+resource "kubernetes_horizontal_pod_autoscaler_v2" "nginx" {
   metadata {
     name = "nginx-hpa"
   }
@@ -85,13 +86,12 @@ resource "kubernetes_horizontal_pod_autoscaler" "nginx" {
     min_replicas = var.hpa_min_replicas
     max_replicas = var.hpa_max_replicas
 
-    # Используем метод с metrics
     metric {
       type = "Resource"
       resource {
         name = "cpu"
         target {
-          type                = "Utilization"
+          type               = "Utilization"
           average_utilization = var.hpa_target_cpu_utilization_percentage
         }
       }
