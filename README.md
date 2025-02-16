@@ -30,5 +30,7 @@ provider_installation {
 yc managed-kubernetes cluster get-credentials --id ${yandex_kubernetes_cluster.zonal_cluster.id} --external
 ```
 
-
-
+**N.B! kubeconfig will be saved along the path**
+```
+~/.kube/config
+```
