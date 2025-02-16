@@ -8,7 +8,7 @@ This repository contains Terraform code to deploy a Kubernetes cluster (managed)
 
 **Init for Yandex.Cloud:**
 ```
-yc config set service_account_key_file k8s/authorized_key.json
+yc config set service-account-key-file k8s/authorized_key.json
 yc config set cloud-id ${var.cloud_id}
 yc config set folder-id ${var.folder_id}
 ```
