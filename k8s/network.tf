@@ -15,7 +15,7 @@ resource "yandex_vpc_security_group" "sg1" {
     project     = "k8s-cluster-demo"
   }
 
-  # Разрешаем входящий трафик на 8080 из Интернета
+  # Разрешаем входящий трафик на 80 из Интернета
   ingress {
     protocol       = "TCP"
     description    = "Allow incoming TCP traffic on port 80 from Internet"
