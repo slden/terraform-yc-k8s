@@ -8,15 +8,6 @@ variable "cloud_id" {
   sensitive = true
 }
 
-# yc init
-# yc iam create-token
-variable "yandex_token" {
-  description = "IAM token"
-  type = string
-#  Закомментим чтобы можно было передать значение в output - но вообще так не стоит делать   
-#  sensitive = true
-}
-
 variable "subnet_cidr" {
   description = "CIDR block for the subnet"
   type = string
