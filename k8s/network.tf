@@ -15,35 +15,70 @@ resource "yandex_vpc_security_group" "sg1" {
     project     = "k8s-cluster-demo"
   }
 
-  # Разрешаем входящий трафик на 80 из Интернета
+# Разрешаем входящий HTTP-трафик из Интернета
   ingress {
     protocol       = "TCP"
-    description    = "Allow incoming TCP traffic on port 80 from Internet"
+    description    = "Allow incoming HTTP traffic from Internet"
     v4_cidr_blocks = ["0.0.0.0/0"]
-    port           = var.ingress_port
+    from_port      = 80
+    to_port        = 80
   }
 
-  # Разрешаем входящий трафик на порт 443 (K8s API server) из Интернета
+  # Разрешаем входящий HTTPS-трафик из Интернета
   ingress {
     protocol       = "TCP"
-    description    = "Allow incoming TCP traffic on port 443 (K8s API server) from Internet"
+    description    = "Allow incoming HTTPS traffic from Internet"
     v4_cidr_blocks = ["0.0.0.0/0"]
-    port           = 443
-  }  
+    from_port      = 443
+    to_port        = 443
+  }
 
-  # Разрешаем весь трафик внутри кластера (по всей подсети)
+  # Разрешаем входящие соединения от узлов кластера 
   ingress {
-    protocol       = "ANY"
-    description    = "Allow all traffic inside the cluster network"
+    protocol       = "TCP"
+    description    = "Allow kubelet communication within the cluster"
     v4_cidr_blocks = [var.subnet_cidr]
+    from_port      = 10250
+    to_port        = 10250
+  }
+
+  # Исходящий трафик
+
+  # Разрешаем исходящий HTTP-трафик
+  egress {
+    protocol       = "TCP"
+    description    = "Allow outgoing HTTP traffic"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 80
+    to_port        = 80
+  }
+
+  # Разрешаем исходящий HTTPS-трафик
+  egress {
+    protocol       = "TCP"
+    description    = "Allow outgoing HTTPS traffic"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 443
+    to_port        = 443
+  }
+
+  # Разрешаем исходящий DNS-трафик
+  egress {
+    protocol       = "UDP"
+    description    = "Allow outgoing DNS traffic"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 53
+    to_port        = 53
   }
 
   # Разрешаем весь исходящий трафик
   egress {
     protocol       = "ANY"
-    description    = "Allow all outgoing traffic"
-    v4_cidr_blocks = [var.subnet_cidr]
-  }
+    description    = "any connections"
+    v4_cidr_blocks = ["0.0.0.0/0"]
+    from_port      = 0
+    to_port        = 65535
+  }  
 }
 
 # Создаем subnet

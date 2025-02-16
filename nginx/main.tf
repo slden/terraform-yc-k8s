@@ -41,6 +41,17 @@ resource "kubernetes_deployment" "nginx" {
           name  = "nginx"
           image = var.nginx_image
 
+          resources {
+            requests = {
+              cpu    = "100m"
+              memory = "128Mi"
+            }
+            limits = {
+              cpu    = "500m"
+              memory = "256Mi"
+            }
+          }
+
           port {
             container_port = 80
           }
@@ -65,36 +76,6 @@ resource "kubernetes_service" "nginx" {
     port {
       port        = var.service_port
       target_port = 80
-    }
-  }
-}
-
-# HPA для Nginx
-# Вот тут немножко погулить пришлось :) Нужно именно v2 использовать, иначе ловил ошибку
-resource "kubernetes_horizontal_pod_autoscaler_v2" "nginx" {
-  metadata {
-    name = "nginx-hpa"
-  }
-
-  spec {
-    scale_target_ref {
-      api_version = "apps/v1"
-      kind        = "Deployment"
-      name        = kubernetes_deployment.nginx.metadata[0].name
-    }
-
-    min_replicas = var.hpa_min_replicas
-    max_replicas = var.hpa_max_replicas
-
-    metric {
-      type = "Resource"
-      resource {
-        name = "cpu"
-        target {
-          type               = "Utilization"
-          average_utilization = var.hpa_target_cpu_utilization_percentage
-        }
-      }
     }
   }
 }
