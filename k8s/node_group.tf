@@ -1,6 +1,7 @@
 resource "yandex_kubernetes_node_group" "k8s_node_group" {
   cluster_id = yandex_kubernetes_cluster.zonal_cluster.id
-  name       = "k8s_node_group"
+  # Название может содержать только буквы, цифры и "-"
+  name       = "k8s-node-group"
   version    = "1.30"
 
   labels = {
