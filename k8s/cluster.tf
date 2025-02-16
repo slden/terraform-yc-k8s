@@ -24,7 +24,6 @@ resource "yandex_kubernetes_cluster" "zonal_cluster" {
       auto_upgrade = true
 
       maintenance_window {
-        day        = tuesday
         start_time = "03:00"
         duration   = "3h"
       }
