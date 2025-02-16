@@ -25,3 +25,10 @@ provider_installation {
   }
 }
 ```
+**After deploying the cluster, copy and execute output**
+```
+yc managed-kubernetes cluster get-credentials --id ${yandex_kubernetes_cluster.zonal_cluster.id} --external
+```
+
+
+
