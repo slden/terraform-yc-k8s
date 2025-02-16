@@ -34,3 +34,4 @@ yc managed-kubernetes cluster get-credentials --id ${yandex_kubernetes_cluster.z
 ```
 ~/.kube/config
 ```
+**After nginx deployment, the public address will be displayed in the output**
